@@ -18,12 +18,13 @@ const CursorChat = ({ cursor, cursorState, setCursorState, updateMyPresence }: C
   }
   const handleKeyDown = (event: React.
     KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      setCursorState({
-        mode: CursorMode.Chat,
-        previousMessage: cursorState.message,
-        message: ''
-      })
+      if (event.key === "Enter") {
+        setCursorState({
+          mode: CursorMode.Chat,
+          // @ts-ignore
+          previousMessage: cursorState.message,
+          message: "",
+        });
     }
     else if (event.key === "Escape") {
       setCursorState({
