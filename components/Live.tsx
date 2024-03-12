@@ -2,16 +2,16 @@ import { useMyPresence, useOthers } from "@/liveblocks.config"
 import LiveCursors from "./cursor/LiveCursors"
 import { useCallback, useEffect, useState } from "react";
 import CursorChat from "./cursor/CursorChat";
-import { CursorMode } from "@/types/type";
+import { CursorMode, CursorState } from "@/types/type";
 
 
 const Live = () => {
     const others = useOthers()
     const [{ cursor }, updateMyPresence] = useMyPresence() as any;
 
-    const [cursorState, setCursorState] = useState(({
-        mode: CursorMode.Hidden
-    }))
+    const [cursorState, setCursorState] = useState<CursorState>({
+        mode: CursorMode.Hidden,
+    });
 
     const handlePointerMove = useCallback((event: React.PointerEvent) => {
         event.preventDefault()
@@ -23,7 +23,7 @@ const Live = () => {
     }, [])
 
     const handlePointerLeave = useCallback((event: React.PointerEvent) => {
-        setCursorState({ mod: CursorMode.Hidden })
+        setCursorState({ mode: CursorMode.Hidden })
 
 
         updateMyPresence({ cursor: null, message: null })
@@ -40,27 +40,27 @@ const Live = () => {
 
     useEffect(() => {  // to listen to "/" event
         const onKeyUp = (e: KeyboardEvent) => {
-            if(e.key == "/") {
-                setCursorState ({
-                    mode : CursorMode.Chat,
-                    previousMessage : null,
-                    message : ''
-                })
-            }
-            else if(e.key === "Escape") {
-                updateMyPresence({message : CursorMode.Hidden})
+            if (e.key === "/") {
+                setCursorState({
+                    mode: CursorMode.Chat,
+                    previousMessage: null,
+                    message: "",
+                });
+            } else if (e.key === "Escape") {
+                updateMyPresence({ message: "" });
+                setCursorState({ mode: CursorMode.Hidden });
             }
         }
 
         const onKeyDown = (e: KeyboardEvent) => {
-            if(e.key === "/") {
+            if (e.key === "/") {
                 e.preventDefault()
             }
         }
 
         window.addEventListener("keyup", onKeyUp)
         window.addEventListener("keydown", onKeyDown)
-    },[updateMyPresence])
+    }, [updateMyPresence])
 
     return (
         <div
